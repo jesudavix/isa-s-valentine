@@ -31,6 +31,14 @@ const Index = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Auto-play carousel
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentPhoto((p) => (p + 1) % photos.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
+
   const scrollToQuestion = () => {
     questionRef.current?.scrollIntoView({ behavior: "smooth" });
   };
