@@ -1,9 +1,16 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Heart, Music, Volume2, VolumeX } from "lucide-react";
+import { Heart, Music, Volume2, VolumeX, ChevronLeft, ChevronRight } from "lucide-react";
 import FloatingHearts from "@/components/FloatingHearts";
 import { useHeartExplosion } from "@/hooks/useHeartExplosion";
+import photo1 from "@/assets/photo1.jpeg";
+import photo2 from "@/assets/photo2.jpeg";
+import photo3 from "@/assets/photo3.jpeg";
+import photo4 from "@/assets/photo4.jpeg";
+
+const photos = [photo1, photo2, photo3, photo4];
 
 const Index = () => {
+  const [currentPhoto, setCurrentPhoto] = useState(0);
   const [answered, setAnswered] = useState(false);
   const [musicPlaying, setMusicPlaying] = useState(false);
   const questionRef = useRef<HTMLDivElement>(null);
@@ -85,9 +92,9 @@ const Index = () => {
         </button>
       </section>
 
-      {/* Middle Section */}
-      <section className="relative z-10 flex min-h-[60vh] items-center justify-center bg-secondary/30 px-6 py-20">
-        <div className="scroll-fade max-w-lg text-center">
+      {/* Middle Section - Message + Gallery */}
+      <section className="relative z-10 bg-secondary/30 px-6 py-20">
+        <div className="scroll-fade mx-auto max-w-lg text-center mb-16">
           <Heart className="mx-auto mb-6 h-8 w-8 text-primary/40" />
           <p className="font-serif text-2xl leading-relaxed text-foreground/80 sm:text-3xl">
             Cada momento contigo es especial.
@@ -99,6 +106,51 @@ const Index = () => {
             Contigo todo tiene más sentido.
           </p>
           <Heart className="mx-auto mt-6 h-8 w-8 text-primary/40" />
+        </div>
+
+        {/* Photo Carousel */}
+        <div className="scroll-fade mx-auto max-w-md">
+          <h3 className="mb-6 text-center font-serif text-2xl text-primary/70">Nuestros momentos 💕</h3>
+          <div className="relative overflow-hidden rounded-2xl shadow-xl">
+            <div
+              className="flex transition-transform duration-500 ease-out"
+              style={{ transform: `translateX(-${currentPhoto * 100}%)` }}
+            >
+              {photos.map((src, i) => (
+                <img
+                  key={i}
+                  src={src}
+                  alt={`Nosotros ${i + 1}`}
+                  className="w-full flex-shrink-0 object-cover aspect-[4/5]"
+                />
+              ))}
+            </div>
+            <button
+              onClick={() => setCurrentPhoto((p) => (p - 1 + photos.length) % photos.length)}
+              className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-background/70 p-2 backdrop-blur-sm transition-all hover:bg-background"
+              aria-label="Previous photo"
+            >
+              <ChevronLeft className="h-5 w-5 text-foreground" />
+            </button>
+            <button
+              onClick={() => setCurrentPhoto((p) => (p + 1) % photos.length)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-background/70 p-2 backdrop-blur-sm transition-all hover:bg-background"
+              aria-label="Next photo"
+            >
+              <ChevronRight className="h-5 w-5 text-foreground" />
+            </button>
+          </div>
+          {/* Dots */}
+          <div className="mt-4 flex justify-center gap-2">
+            {photos.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentPhoto(i)}
+                className={`h-2.5 w-2.5 rounded-full transition-all ${i === currentPhoto ? "bg-primary scale-110" : "bg-primary/30"}`}
+                aria-label={`Photo ${i + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </section>
 
